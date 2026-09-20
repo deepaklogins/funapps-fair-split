@@ -1,25 +1,46 @@
 {
   "expo": {
-    "name": "rent-splitter",
-    "slug": "rent-splitter",
+    "name": "Fair Split: Rent Calculator",
+    "slug": "funapss",
+    "scheme": "fair-split",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#16213e"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.funapps.fairsplit"
     },
     "android": {
+      "package": "com.funapps.fairsplit",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#e94560",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "predictiveBackGestureEnabled": false
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-sharing"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "65d525f3-3324-426e-912e-8ad6a7e5beaa"
+      },
+      "router": {}
+    },
+    "owner": "brand_crackers"
   }
 }
