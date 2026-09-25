@@ -47,7 +47,7 @@ export function calculateSplit(
 
   const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
 
-  return scores.map(({ room, score }) => {
+  const results = scores.map(({ room, score }) => {
     const percentage = totalScore > 0 ? (score / totalScore) * 100 : 100 / rooms.length;
     const rent = Math.round((percentage / 100) * totalRent);
 
@@ -60,4 +60,17 @@ export function calculateSplit(
       rent,
     };
   });
+
+  // Fix rounding remainder: assign difference to the highest-scoring room
+  const roundedSum = results.reduce((sum, r) => sum + r.rent, 0);
+  const remainder = totalRent - roundedSum;
+  if (remainder !== 0 && results.length > 0) {
+    const highestIdx = results.reduce(
+      (maxIdx, r, idx, arr) => (r.score > arr[maxIdx].score ? idx : maxIdx),
+      0
+    );
+    results[highestIdx].rent += remainder;
+  }
+
+  return results;
 }

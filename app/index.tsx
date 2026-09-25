@@ -13,11 +13,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
 import { colors, spacing } from '../src/theme';
 
+function sanitizeRent(value: string): string {
+  return value.replace(/,/g, '');
+}
+
 export default function HomeScreen() {
   const router = useRouter();
   const { rooms, totalRent, setTotalRent, removeRoom } = useApp();
 
-  const canCalculate = rooms.length >= 2 && Number(totalRent) > 0;
+  const canCalculate = rooms.length >= 2 && Number(sanitizeRent(totalRent)) > 0;
 
   return (
     <View style={styles.container}>
@@ -25,7 +29,7 @@ export default function HomeScreen() {
         options={{
           title: 'Fair Split',
           headerRight: () =>
-            rooms.length > 0 ? (
+            rooms.length >= 2 ? (
               <TouchableOpacity onPress={() => router.push('/results')}>
                 <Ionicons name="calculator" size={24} color={colors.accent} />
               </TouchableOpacity>
@@ -50,7 +54,7 @@ export default function HomeScreen() {
           <TextInput
             style={styles.rentInput}
             value={totalRent}
-            onChangeText={setTotalRent}
+            onChangeText={(text) => setTotalRent(sanitizeRent(text))}
             keyboardType="numeric"
             placeholder="2,400"
             placeholderTextColor={colors.textDim}

@@ -8,7 +8,7 @@ import {
   Share,
   Alert,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
 import { calculateSplit } from '../src/utils/scoring';
@@ -17,8 +17,26 @@ import { colors, spacing } from '../src/theme';
 const BAR_COLORS = ['#e94560', '#f39c12', '#2ecc71', '#3498db', '#9b59b6', '#1abc9c'];
 
 export default function ResultsScreen() {
+  const router = useRouter();
   const { rooms, totalRent } = useApp();
   const rent = Number(totalRent) || 0;
+
+  if (rooms.length < 2) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Stack.Screen options={{ title: 'Results' }} />
+        <Text style={styles.emptyEmoji}>🛏️</Text>
+        <Text style={styles.emptyText}>Add at least 2 rooms to see results</Text>
+        <TouchableOpacity
+          style={[styles.shareBtn, { marginTop: spacing.md }]}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={22} color="#fff" />
+          <Text style={styles.shareBtnText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const results = useMemo(() => {
     const splits = calculateSplit(rooms, rent);
@@ -120,9 +138,10 @@ export default function ResultsScreen() {
       <View style={styles.explainerCard}>
         <Text style={styles.explainerTitle}>How scoring works</Text>
         <Text style={styles.explainerText}>
-          Each room is scored based on: size (40%), private bathroom (20%), natural
-          light (10%), closet (10%), balcony (10%), and noise level (10%). The rent
-          is split proportionally to each room's score.
+          Each room starts with a base score. Points are added for size (1pt per
+          10 sqft), private bathroom (+15), natural light (+3/6/9), closet
+          (+3/6/9), balcony (+8), and subtracted for noise (-4/-8). The rent is
+          split proportionally to each room's score.
         </Text>
       </View>
 
