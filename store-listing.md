@@ -1,10 +1,10 @@
 # Google Play Store Listing
 
 ## App Name (30 chars max)
-Fair Split: Rent Calculator
+Rent Splitter: Fair Room Calc
 
 ## Short Description (80 chars max)
-Split rent fairly based on room size, bathroom, light, closet & more. No fights!
+Rent splitter for roommates. Split rent fairly by room size, bathroom & features
 
 ## Full Description (4000 chars max)
 Tired of arguing about who should pay what? Fair Split calculates the perfect rent split based on what each room actually offers.
@@ -41,7 +41,7 @@ No ads. No subscriptions. Just fair rent.
 Download Fair Split and end the rent argument forever!
 
 ## Keywords/Tags
-rent splitter, rent calculator, fair rent, split rent, roommate calculator, room rent, apartment split, roommate rent, rent division, fair split
+rent splitter, rent calculator, split rent, roommate rent calculator, fair rent split, room rent calculator, apartment rent split, roommate calculator, rent division calculator, split rent by room
 
 ## Category
 Tools / Utilities
