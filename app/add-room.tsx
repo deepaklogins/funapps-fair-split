@@ -8,7 +8,7 @@ import {
   ScrollView,
   Switch,
 } from 'react-native';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter, Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../src/context/AppContext';
@@ -86,41 +86,59 @@ function ToggleRow({
 
 export default function AddRoomScreen() {
   const router = useRouter();
-  const { addRoom, rooms } = useApp();
+  const { addRoom, updateRoom, rooms } = useApp();
+  const { roomId } = useLocalSearchParams<{ roomId?: string }>();
 
-  const [name, setName] = useState(`Room ${rooms.length + 1}`);
-  const [sqft, setSqft] = useState('');
-  const [hasWindow, setHasWindow] = useState(true);
-  const [naturalLight, setNaturalLight] = useState<Level>(2);
-  const [hasCloset, setHasCloset] = useState(true);
-  const [closetSize, setClosetSize] = useState<Level>(2);
-  const [hasBathroom, setHasBathroom] = useState(false);
-  const [hasBalcony, setHasBalcony] = useState(false);
-  const [noiseLevel, setNoiseLevel] = useState<Level>(2);
+  const existingRoom = roomId ? rooms.find((r) => r.id === roomId) : undefined;
+  const isEditing = !!existingRoom;
+
+  const [name, setName] = useState(existingRoom?.name ?? `Room ${rooms.length + 1}`);
+  const [sqft, setSqft] = useState(existingRoom ? String(existingRoom.sqft) : '');
+  const [hasWindow, setHasWindow] = useState(existingRoom?.hasWindow ?? true);
+  const [naturalLight, setNaturalLight] = useState<Level>(existingRoom?.naturalLight ?? 2);
+  const [hasCloset, setHasCloset] = useState(existingRoom?.hasCloset ?? true);
+  const [closetSize, setClosetSize] = useState<Level>(existingRoom?.closetSize ?? 2);
+  const [hasBathroom, setHasBathroom] = useState(existingRoom?.hasBathroom ?? false);
+  const [hasBalcony, setHasBalcony] = useState(existingRoom?.hasBalcony ?? false);
+  const [noiseLevel, setNoiseLevel] = useState<Level>(existingRoom?.noiseLevel ?? 2);
 
   const canSave = name.trim().length > 0 && Number(sqft) > 0;
 
   const handleSave = () => {
-    const room: Room = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      sqft: Number(sqft),
-      hasWindow,
-      naturalLight: hasWindow ? naturalLight : 1,
-      hasCloset,
-      closetSize: hasCloset ? closetSize : 1,
-      hasBathroom,
-      hasBalcony,
-      noiseLevel,
-    };
-    addRoom(room);
+    if (isEditing && existingRoom) {
+      updateRoom(existingRoom.id, {
+        name: name.trim(),
+        sqft: Number(sqft),
+        hasWindow,
+        naturalLight: hasWindow ? naturalLight : 1,
+        hasCloset,
+        closetSize: hasCloset ? closetSize : 1,
+        hasBathroom,
+        hasBalcony,
+        noiseLevel,
+      });
+    } else {
+      const room: Room = {
+        id: Date.now().toString(),
+        name: name.trim(),
+        sqft: Number(sqft),
+        hasWindow,
+        naturalLight: hasWindow ? naturalLight : 1,
+        hasCloset,
+        closetSize: hasCloset ? closetSize : 1,
+        hasBathroom,
+        hasBalcony,
+        noiseLevel,
+      };
+      addRoom(room);
+    }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-      <Stack.Screen options={{ title: 'Add Room' }} />
+      <Stack.Screen options={{ title: isEditing ? 'Edit Room' : 'Add Room' }} />
 
       {/* Name */}
       <View style={styles.card}>
@@ -218,7 +236,7 @@ export default function AddRoomScreen() {
         onPress={handleSave}
       >
         <Ionicons name="checkmark-circle" size={22} color="#fff" />
-        <Text style={styles.saveBtnText}>Add Room</Text>
+        <Text style={styles.saveBtnText}>{isEditing ? 'Update Room' : 'Add Room'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -19,7 +19,7 @@ function sanitizeRent(value: string): string {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { rooms, totalRent, setTotalRent, removeRoom, currency, setCurrency } = useApp();
+  const { rooms, totalRent, setTotalRent, removeRoom, currency, setCurrency, reset } = useApp();
 
   const canCalculate = rooms.length >= 2 && Number(sanitizeRent(totalRent)) > 0;
 
@@ -114,7 +114,11 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 100 }}
           renderItem={({ item }) => (
-            <View style={styles.roomCard}>
+            <TouchableOpacity
+              style={styles.roomCard}
+              onPress={() => router.push(`/add-room?roomId=${item.id}`)}
+              activeOpacity={0.7}
+            >
               <View style={styles.roomInfo}>
                 <Text style={styles.roomName}>{item.name}</Text>
                 <View style={styles.roomTags}>
@@ -152,7 +156,7 @@ export default function HomeScreen() {
               >
                 <Ionicons name="trash-outline" size={22} color={colors.accent} />
               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}
@@ -166,6 +170,22 @@ export default function HomeScreen() {
         >
           <Ionicons name="calculator" size={22} color="#fff" />
           <Text style={styles.calcBtnText}>Calculate Fair Split</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Start Over Button */}
+      {rooms.length > 0 && (
+        <TouchableOpacity
+          style={styles.startOverBtn}
+          onPress={() =>
+            Alert.alert('Start Over', 'Remove all rooms and reset?', [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Reset', style: 'destructive', onPress: reset },
+            ])
+          }
+        >
+          <Ionicons name="refresh" size={18} color={colors.textDim} />
+          <Text style={styles.startOverText}>Start Over</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -276,4 +296,17 @@ const styles = StyleSheet.create({
   },
   calcBtnDisabled: { opacity: 0.5 },
   calcBtnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  startOverBtn: {
+    position: 'absolute',
+    bottom: spacing.xs,
+    left: spacing.md,
+    right: spacing.md,
+    borderRadius: 12,
+    padding: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+  },
+  startOverText: { color: colors.textDim, fontSize: 14, fontWeight: '600' },
 });

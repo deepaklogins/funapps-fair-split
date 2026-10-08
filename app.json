@@ -3,7 +3,7 @@
     "name": "Fair Split: Rent Calculator",
     "slug": "funapss",
     "scheme": "fair-split",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.funapps.fairsplit",
-      "versionCode": 4,
+      "versionCode": 5,
       "adaptiveIcon": {
         "backgroundColor": "#e94560",
         "foregroundImage": "./assets/android-icon-foreground.png",
