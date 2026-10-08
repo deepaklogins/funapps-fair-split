@@ -18,7 +18,7 @@ const BAR_COLORS = ['#e94560', '#f39c12', '#2ecc71', '#3498db', '#9b59b6', '#1ab
 
 export default function ResultsScreen() {
   const router = useRouter();
-  const { rooms, totalRent } = useApp();
+  const { rooms, totalRent, currency } = useApp();
   const rent = Number(totalRent) || 0;
 
   if (rooms.length < 2) {
@@ -46,13 +46,13 @@ export default function ResultsScreen() {
   const maxScore = Math.max(...results.map((r) => r.score), 1);
 
   const shareText = useMemo(() => {
-    let text = `🏠 Fair Rent Split — Total: $${rent}/mo\n\n`;
+    let text = `🏠 Fair Rent Split — Total: ${currency}${rent}/mo\n\n`;
     results.forEach((r) => {
-      text += `${r.roomName}: $${r.rent}/mo (${r.percentage}%)\n`;
+      text += `${r.roomName}: ${currency}${r.rent}/mo (${r.percentage}%)\n`;
     });
     text += `\nCalculated with Fair Split app ✨`;
     return text;
-  }, [results, rent]);
+  }, [results, rent, currency]);
 
   const handleShare = async () => {
     try {
@@ -79,7 +79,7 @@ export default function ResultsScreen() {
       {/* Summary Card */}
       <View style={styles.summaryCard}>
         <Text style={styles.summaryLabel}>Total Rent</Text>
-        <Text style={styles.summaryAmount}>${rent.toLocaleString()}</Text>
+        <Text style={styles.summaryAmount}>{currency}{rent.toLocaleString()}</Text>
         <Text style={styles.summaryLabel}>/month split across {rooms.length} rooms</Text>
       </View>
 
@@ -100,7 +100,7 @@ export default function ResultsScreen() {
                 </Text>
               </View>
               <View style={styles.rentBadge}>
-                <Text style={styles.rentAmount}>${result.rent}</Text>
+                <Text style={styles.rentAmount}>{currency}{result.rent}</Text>
                 <Text style={styles.rentPer}>/mo</Text>
               </View>
             </View>

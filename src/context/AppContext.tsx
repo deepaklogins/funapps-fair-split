@@ -4,10 +4,12 @@ import { Room } from '../types';
 interface AppState {
   rooms: Room[];
   totalRent: string;
+  currency: string;
   addRoom: (room: Room) => void;
   updateRoom: (id: string, room: Partial<Room>) => void;
   removeRoom: (id: string) => void;
   setTotalRent: (rent: string) => void;
+  setCurrency: (currency: string) => void;
   reset: () => void;
 }
 
@@ -16,6 +18,7 @@ const AppContext = createContext<AppState | null>(null);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [totalRent, setTotalRent] = useState('');
+  const [currency, setCurrency] = useState('$');
 
   const addRoom = useCallback((room: Room) => {
     setRooms((prev) => [...prev, room]);
@@ -38,7 +41,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AppContext.Provider
-      value={{ rooms, totalRent, addRoom, updateRoom, removeRoom, setTotalRent, reset }}
+      value={{ rooms, totalRent, currency, addRoom, updateRoom, removeRoom, setTotalRent, setCurrency, reset }}
     >
       {children}
     </AppContext.Provider>

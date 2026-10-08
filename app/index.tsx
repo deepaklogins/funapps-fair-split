@@ -19,7 +19,7 @@ function sanitizeRent(value: string): string {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { rooms, totalRent, setTotalRent, removeRoom } = useApp();
+  const { rooms, totalRent, setTotalRent, removeRoom, currency, setCurrency } = useApp();
 
   const canCalculate = rooms.length >= 2 && Number(sanitizeRent(totalRent)) > 0;
 
@@ -49,8 +49,29 @@ export default function HomeScreen() {
       {/* Total Rent Input */}
       <View style={styles.rentCard}>
         <Text style={styles.label}>Total Monthly Rent</Text>
+        <View style={styles.currencyRow}>
+          {['$', '₹', '€', '£'].map((sym) => (
+            <TouchableOpacity
+              key={sym}
+              style={[
+                styles.currencyBtn,
+                currency === sym && styles.currencyBtnActive,
+              ]}
+              onPress={() => setCurrency(sym)}
+            >
+              <Text
+                style={[
+                  styles.currencyBtnText,
+                  currency === sym && styles.currencyBtnTextActive,
+                ]}
+              >
+                {sym}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.rentInputRow}>
-          <Text style={styles.currency}>$</Text>
+          <Text style={styles.currency}>{currency}</Text>
           <TextInput
             style={styles.rentInput}
             value={totalRent}
@@ -174,6 +195,21 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   label: { color: colors.textDim, fontSize: 13, marginBottom: spacing.xs },
+  currencyRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: spacing.sm,
+  },
+  currencyBtn: {
+    backgroundColor: colors.cardLight,
+    borderRadius: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+  },
+  currencyBtnActive: { backgroundColor: colors.accent },
+  currencyBtnText: { color: colors.textDim, fontSize: 16, fontWeight: '600' },
+  currencyBtnTextActive: { color: colors.white },
   rentInputRow: { flexDirection: 'row', alignItems: 'center' },
   currency: { color: colors.accent, fontSize: 28, fontWeight: '700', marginRight: spacing.sm },
   rentInput: {
